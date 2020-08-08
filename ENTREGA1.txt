@@ -1,0 +1,73 @@
+INTEGRANTES:
+JUAN MANUEL CUELLAR
+NICOLAS IBAGON
+SANTIAGO URIBE
+
+############################## ENTREGA 1 #######################################
+
+CREATE TABLE Banco(
+codigo NUMBER(8) PRIMARY KEY,
+nombre VARCHAR2(15) NOT NULL
+);
+
+CREATE TABLE Marca(
+codigo NUMBER(8) PRIMARY KEY,
+nombre VARCHAR2(16) NOT NULL
+);
+
+CREATE TABLE Persona(
+idP NUMBER(10) PRIMARY KEY,
+tipo_id VARCHAR2(16) NOT NULL,
+nombre VARCHAR2(30),
+celular NUMBER(10),
+direccion VARCHAR2(20),
+correo VARCHAR2(20),
+cod_vendedor NUMBER(8)
+);
+
+CREATE TABLE Tarjeta(
+nro_tarjeta NUMBER(16) PRIMARY KEY,
+franquicia VARCHAR2(10) NOT NULL,
+tipo VARCHAR2(7) NOT NULL,
+banco NUMBER(8) REFERENCES Banco(codigo)
+);
+
+CREATE TABLE Transaccion(
+nro_tarjeta NUMBER(16) REFERENCES Tarjeta(nro_tarjeta),
+nro_transaccion NUMBER(12) PRIMARY KEY
+);
+
+CREATE TABLE Factura(
+idF NUMBER(10) PRIMARY KEY,
+fecha DATE NOT NULL,
+valor_envio NUMBER(10) DEFAULT 0,
+metodo_pago VARCHAR2(10) NOT NULL,
+cliente NUMBER(10) REFERENCES Persona (idP),
+nro_tarjeta NUMBER(16) DEFAULT 0 REFERENCES Tarjeta (nro_tarjeta),
+valor NUMBER(13) NOT NULL
+);
+
+CREATE TABLE Producto(
+codigo NUMBER(8) PRIMARY KEY,
+tipo_producto VARCHAR2(15) NOT NULL,
+material VARCHAR2(15),
+precio NUMBER(12) NOT NULL,
+vigencia DATE NOT NULL,
+terminos VARCHAR2(50) NOT NULL,
+cantidad NUMBER(10) NOT NULL,
+marca NUMBER(8) REFERENCES Marca (codigo)
+);
+
+CREATE TABLE Compra(
+idC NUMBER(10) PRIMARY KEY,
+nro_factura NUMBER(10) REFERENCES Factura (idF),
+producto NUMBER(8) REFERENCES Producto (codigo),
+canntidad NUMBER(8) NOT NULL
+);
+
+CREATE TABLE Devoluciones(
+cod_factura NUMBER(10) REFERENCES Factura (idF),
+cantidad NUMBER(10) NOT NULL,
+cod_producto NUMBER(8) REFERENCES Producto (codigo),
+persona NUMBER(10) REFERENCES Persona (idP)
+);
